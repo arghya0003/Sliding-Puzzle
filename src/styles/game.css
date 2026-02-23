@@ -269,6 +269,62 @@
     cursor: not-allowed;
 }
 
+/* ── Algorithm Selection ── */
+.algo-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.algo-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.algo-buttons {
+    display: flex;
+    gap: 0.4rem;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.algo-btn {
+    flex: 1;
+    min-width: 110px;
+    padding: 0.45rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    background: rgba(255, 255, 255, 0.04);
+    color: #94a3b8;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: all 0.16s ease;
+}
+
+.algo-btn:hover {
+    background: rgba(255, 255, 255, 0.09);
+    color: #f1f5f9;
+}
+
+.algo-btn.active {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.2));
+    border-color: rgba(139, 92, 246, 0.5);
+    color: #c4b5fd;
+}
+
+.algo-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
 /* ── Action Buttons ── */
 .action-group {
     display: flex;
@@ -459,6 +515,23 @@
     font-size: 0.88rem;
     color: #94a3b8;
     margin-top: -0.5rem;
+}
+
+.modal-info {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.8rem 0;
+}
+
+.modal-algorithm {
+    font-size: 0.8rem;
+    color: #c4b5fd;
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-weight: 600;
 }
 
 .modal-stats {

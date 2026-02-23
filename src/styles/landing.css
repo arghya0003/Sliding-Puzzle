@@ -58,6 +58,80 @@ body {
     gap: 3rem;
 }
 
+/* ── Player Info Bar ── */
+.player-info-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+}
+
+.player-name-input-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.player-name-input-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.player-name-input {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: var(--font);
+    outline: none;
+    transition: all 0.2s ease;
+    flex: 1;
+    max-width: 250px;
+}
+
+.player-name-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.player-name-input:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.2);
+}
+
+.leaderboard-btn {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--violet), var(--cyan));
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.leaderboard-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+}
+
+.leaderboard-btn:active {
+    transform: translateY(0);
+}
+
 /* ── Orbs ── */
 .bg-orb {
     position: fixed;
@@ -496,4 +570,24 @@ body {
     font-weight: 500;
     color: var(--text-secondary);
     backdrop-filter: blur(12px);
+}
+
+/* ── Mobile Responsive ── */
+@media (max-width: 640px) {
+    .player-info-bar {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .player-name-input-group {
+        width: 100%;
+    }
+
+    .player-name-input {
+        max-width: 100%;
+    }
+
+    .leaderboard-btn {
+        width: 100%;
+    }
 }

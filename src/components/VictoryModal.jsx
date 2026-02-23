@@ -6,7 +6,7 @@ function formatTime(seconds) {
     return `${m}:${s}`;
 }
 
-export default function VictoryModal({ show, moves, elapsed, onPlayAgain, onReset }) {
+export default function VictoryModal({ show, moves, elapsed, playerName = 'Player', algorithm = 'A*', onPlayAgain, onReset }) {
     return (
         <AnimatePresence>
             {show && (
@@ -26,7 +26,11 @@ export default function VictoryModal({ show, moves, elapsed, onPlayAgain, onRese
                         {/* Trophy */}
                         <div className="modal-trophy">🏆</div>
                         <h2 className="modal-title">Puzzle Solved!</h2>
-                        <p className="modal-subtitle">Outstanding performance!</p>
+                        <p className="modal-subtitle">Outstanding performance, {playerName}!</p>
+
+                        <div className="modal-info">
+                            <span className="modal-algorithm">🔧 {algorithm}</span>
+                        </div>
 
                         <div className="modal-stats">
                             <div className="modal-stat">

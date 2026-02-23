@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import '../styles/landing.css';
@@ -81,19 +81,34 @@ function MiniGrid({ size, color }) {
 
 export default function LandingPage() {
     const navigate = useNavigate();
+    const [playerName, setPlayerName] = useState('');
     const [selectedDiff, setSelectedDiff] = useState({
         '8puzzle': MODES[0].difficulties[1],
         '15puzzle': MODES[1].difficulties[1],
         '24puzzle': MODES[2].difficulties[1],
     });
 
+    useEffect(() => {
+        // Load player name from localStorage
+        const saved = localStorage.getItem('playerName');
+        if (saved) setPlayerName(saved);
+    }, []);
+
+    function handlePlayerNameChange(e) {
+        const name = e.target.value;
+        setPlayerName(name);
+        localStorage.setItem('playerName', name);
+    }
+
     function handlePlay(mode) {
+        const name = playerName.trim() || 'Anonymous Player';
         navigate('/game', {
             state: {
                 size: mode.size,
                 difficulty: selectedDiff[mode.id],
                 modeName: mode.title,
                 modeColor: mode.color,
+                playerName: name,
             },
         });
     }
@@ -106,6 +121,35 @@ export default function LandingPage() {
             <div className="bg-orb orb3" />
 
             <div className="landing-inner">
+                {/* ── Player Info Bar ── */}
+                <motion.div
+                    className="player-info-bar"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <div className="player-name-input-group">
+                        <label htmlFor="playerName">👤 Player Name:</label>
+                        <input
+                            id="playerName"
+                            type="text"
+                            value={playerName}
+                            onChange={handlePlayerNameChange}
+                            placeholder="Enter your name..."
+                            maxLength={20}
+                            className="player-name-input"
+                        />
+                    </div>
+                    <motion.button
+                        className="leaderboard-btn"
+                        onClick={() => navigate('/leaderboard')}
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
+                    >
+                        🏆 Leaderboard
+                    </motion.button>
+                </motion.div>
+
                 {/* ── Hero ── */}
                 <motion.header
                     className="hero"
@@ -122,7 +166,7 @@ export default function LandingPage() {
                     </h1>
                     <p className="hero-sub">
                         A premium sliding puzzle experience with smooth animations, undo/redo,
-                        and an <strong>A★ auto-solver</strong> using Manhattan Distance &amp; Misplaced Tiles heuristics.
+                        and an <strong>A★ auto-solver</strong> with multiple algorithms and heuristics.
                         Choose your battleground below.
                     </p>
                 </motion.header>
@@ -200,10 +244,10 @@ export default function LandingPage() {
                 >
                     {[
                         { icon: '↩️', label: 'Undo / Redo' },
-                        { icon: '⚡', label: 'A* Auto-Solver' },
+                        { icon: '⚡', label: 'Multiple Algorithms' },
                         { icon: '🔊', label: 'Sound FX' },
-                        { icon: '🏆', label: 'Score System' },
-                        { icon: '📐', label: 'Dual Heuristics' },
+                        { icon: '🏆', label: 'Leaderboard' },
+                        { icon: '📈', label: 'Score System' },
                     ].map((f) => (
                         <div key={f.label} className="feature-chip">
                             <span>{f.icon}</span>

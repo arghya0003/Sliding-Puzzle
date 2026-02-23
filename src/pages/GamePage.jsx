@@ -7,6 +7,7 @@ import {
     goalState, isGoal, moveTile, generateShuffled,
 } from '../utils/puzzleLogic';
 import { solvePuzzle, manhattanDistance, misplacedTiles } from '../utils/solver';
+import { addLeaderboardEntry } from '../utils/leaderboard';
 import { clickSound, victorySound } from '../utils/sounds';
 import '../styles/game.css';
 
@@ -22,6 +23,14 @@ const DIFFICULTIES = {
     5: [{ label: 'Easy', moves: 50 }, { label: 'Medium', moves: 150 }, { label: 'Hard', moves: 350 }],
 };
 
+const ALGORITHMS = [
+    { id: 'astar-manhattan', label: 'A* (Manhattan)', algo: 'astar', heuristic: 'manhattan' },
+    { id: 'astar-misplaced', label: 'A* (Misplaced)', algo: 'astar', heuristic: 'misplaced' },
+    { id: 'astar-euclidean', label: 'A* (Euclidean)', algo: 'astar', heuristic: 'euclidean' },
+    { id: 'astar-combined', label: 'A* (Combined)', algo: 'astar', heuristic: 'combined' },
+    { id: 'bfs', label: 'BFS', algo: 'bfs', heuristic: null },
+];
+
 export default function GamePage() {
     const { state } = useLocation();
     const navigate = useNavigate();
@@ -29,9 +38,11 @@ export default function GamePage() {
     const size = state?.size ?? 3;
     const modeColor = state?.modeColor ?? 'violet';
     const modeName = state?.modeName ?? '8-Puzzle';
+    const playerName = state?.playerName ?? 'Anonymous Player';
     const initDiff = state?.difficulty ?? DIFFICULTIES[size][1];
 
     const [difficulty, setDifficulty] = useState(initDiff);
+    const [selectedAlgo, setSelectedAlgo] = useState(ALGORITHMS[3]); // Default to A* Combined
     const [tiles, setTiles] = useState(() => goalState(size));
     const [history, setHistory] = useState(() => [goalState(size)]);
     const [future, setFuture] = useState([]);
@@ -70,8 +81,10 @@ export default function GamePage() {
             setRunning(false);
             setWon(true);
             victorySound.play();
+            // Save to leaderboard
+            addLeaderboardEntry(playerName, size, moves + 1, elapsed, selectedAlgo.algo, selectedAlgo.heuristic);
         }
-    }, [running, size]);
+    }, [running, size, moves, elapsed, playerName, selectedAlgo]);
 
     const handleTileClick = useCallback((idx) => {
         if (isSolving || won) return;
@@ -132,7 +145,7 @@ export default function GamePage() {
     const handleSolve = useCallback(() => {
         if (isSolving || size === 5) return;
         setSolverMsg('');
-        const solution = solvePuzzle(tiles, size);
+        const solution = solvePuzzle(tiles, size, selectedAlgo.algo, selectedAlgo.heuristic);
         if (!solution || solution.length <= 1) {
             setSolverMsg('No solution found within node limit.');
             return;
@@ -156,9 +169,11 @@ export default function GamePage() {
                 setRunning(false);
                 setWon(true);
                 victorySound.play();
+                // Save to leaderboard
+                addLeaderboardEntry(playerName, size, moves + 1 + (steps.length - i), elapsed, selectedAlgo.algo, selectedAlgo.heuristic);
             }
         }, SOLVE_INTERVAL_MS[size] ?? 300);
-    }, [tiles, size, isSolving, running]);
+    }, [tiles, size, isSolving, running, selectedAlgo, playerName, moves, elapsed]);
 
     const handlePlayAgain = useCallback(() => {
         const shuffled = generateShuffled(difficulty.moves, size);
@@ -186,6 +201,7 @@ export default function GamePage() {
                     <div className="mode-label">
                         <span className={`mode-badge badge--${modeColor}`}>{modeName}</span>
                         <span className={`diff-badge badge--muted`}>{difficulty.label}</span>
+                        <span className={`player-badge badge--muted`}>👤 {playerName}</span>
                     </div>
                 </div>
 
@@ -234,6 +250,26 @@ export default function GamePage() {
                     ))}
                 </div>
 
+                {/* Algorithm Selection */}
+                {size < 5 && (
+                    <div className="algo-group">
+                        <label className="algo-label">⚙️ Solver Algorithm:</label>
+                        <div className="algo-buttons">
+                            {ALGORITHMS.map((algo) => (
+                                <button
+                                    key={algo.id}
+                                    className={`algo-btn${selectedAlgo.id === algo.id ? ' active' : ''}`}
+                                    onClick={() => setSelectedAlgo(algo)}
+                                    disabled={isSolving}
+                                    title={algo.label}
+                                >
+                                    {algo.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 {/* Action Buttons */}
                 <div className="action-group">
                     <motion.button className="action-btn shuffle-btn" onClick={handleShuffle} disabled={isSolving} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
@@ -262,7 +298,7 @@ export default function GamePage() {
                         whileHover={{ scale: 1.04 }}
                         whileTap={{ scale: 0.96 }}
                     >
-                        {isSolving ? `⚡ Solving… (${solverStepsLeft} steps left)` : '⚡ Auto Solve (A*)'}
+                        {isSolving ? `⚡ Solving… (${solverStepsLeft} steps left)` : `⚡ Auto Solve (${selectedAlgo.label})`}
                     </motion.button>
                 ) : (
                     <div className="solve-disabled">
@@ -284,6 +320,8 @@ export default function GamePage() {
                 show={won}
                 moves={moves}
                 elapsed={elapsed}
+                playerName={playerName}
+                algorithm={selectedAlgo.label}
                 onPlayAgain={handlePlayAgain}
                 onReset={() => resetAll()}
             />

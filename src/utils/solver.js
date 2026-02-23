@@ -1,6 +1,7 @@
 /**
- * A* solver for NxN sliding puzzle.
- * Heuristics: Manhattan Distance + Misplaced Tiles (max of both for tighter bound).
+ * Multiple solvers for NxN sliding puzzle:
+ * - BFS: Breadth-first search
+ * - A* with different heuristics: Manhattan, Misplaced, Euclidean
  */
 import { goalState, getBlankIdx, isGoal } from './puzzleLogic';
 
@@ -29,9 +30,35 @@ export function misplacedTiles(tiles, size) {
     return count;
 }
 
+/** Euclidean Distance heuristic */
+export function euclideanDistance(tiles, size) {
+    const goal = goalState(size);
+    let dist = 0;
+    for (let i = 0; i < tiles.length; i++) {
+        const val = tiles[i];
+        if (val === 0) continue;
+        const goalIdx = goal.indexOf(val);
+        const dr = Math.floor(i / size) - Math.floor(goalIdx / size);
+        const dc = (i % size) - (goalIdx % size);
+        dist += Math.sqrt(dr * dr + dc * dc);
+    }
+    return dist;
+}
+
 /** Combined heuristic — max gives better admissible lower bound */
 function heuristic(tiles, size) {
     return Math.max(manhattanDistance(tiles, size), misplacedTiles(tiles, size));
+}
+
+/** Get heuristic function based on name */
+function getHeuristic(name) {
+    switch (name) {
+        case 'manhattan': return manhattanDistance;
+        case 'misplaced': return misplacedTiles;
+        case 'euclidean': return euclideanDistance;
+        case 'combined': return heuristic;
+        default: return heuristic;
+    }
 }
 
 function stateKey(tiles) {
@@ -57,18 +84,54 @@ function getNeighbors(tiles, size) {
 }
 
 /**
- * A* search returning array of tile-states from start → goal.
- * Returns null if unsolvable or exceeds maxNodes limit.
+ * BFS (Breadth-First Search) - unguided, explores by cost only
  */
-export function solvePuzzle(startTiles, size, maxNodes = 80000) {
+export function bfsSolver(startTiles, size, maxNodes = 80000) {
     if (isGoal(startTiles, size)) return [startTiles];
 
-    // Simple min-heap via sorted array (acceptable for 3x3, feasible for 4x4)
+    const queue = [];
+    const visited = new Set();
+    const startKey = stateKey(startTiles);
+
+    queue.push({ tiles: startTiles, path: [startTiles] });
+    visited.add(startKey);
+
+    let explored = 0;
+
+    while (queue.length > 0 && explored < maxNodes) {
+        const current = queue.shift();
+        explored++;
+
+        if (isGoal(current.tiles, size)) {
+            return current.path;
+        }
+
+        for (const neighbor of getNeighbors(current.tiles, size)) {
+            const nKey = stateKey(neighbor);
+            if (visited.has(nKey)) continue;
+            visited.add(nKey);
+            queue.push({
+                tiles: neighbor,
+                path: [...current.path, neighbor],
+            });
+        }
+    }
+
+    return null;
+}
+
+/**
+ * A* search with specified heuristic
+ */
+export function aStarSolver(startTiles, size, heuristicName = 'combined', maxNodes = 80000) {
+    if (isGoal(startTiles, size)) return [startTiles];
+
+    const hFn = getHeuristic(heuristicName);
     const open = [];
     const gScore = new Map();
     const closed = new Set();
 
-    const startH = heuristic(startTiles, size);
+    const startH = hFn(startTiles, size);
     const startKey = stateKey(startTiles);
     gScore.set(startKey, 0);
     open.push({ tiles: startTiles, g: 0, f: startH, path: [startTiles] });
@@ -98,7 +161,7 @@ export function solvePuzzle(startTiles, size, maxNodes = 80000) {
             if (g >= prevG) continue;
 
             gScore.set(nKey, g);
-            const h = heuristic(neighbor, size);
+            const h = hFn(neighbor, size);
             open.push({
                 tiles: neighbor,
                 g,
@@ -109,4 +172,16 @@ export function solvePuzzle(startTiles, size, maxNodes = 80000) {
     }
 
     return null; // No solution within node limit
+}
+
+/**
+ * Main solve function - choose algorithm and heuristic
+ * algorithm: 'bfs' | 'astar'
+ * heuristic: 'manhattan' | 'misplaced' | 'euclidean' | 'combined' (only for astar)
+ */
+export function solvePuzzle(startTiles, size, algorithm = 'astar', heuristic = 'combined', maxNodes = 80000) {
+    if (algorithm === 'bfs') {
+        return bfsSolver(startTiles, size, maxNodes);
+    }
+    return aStarSolver(startTiles, size, heuristic, maxNodes);
 }
