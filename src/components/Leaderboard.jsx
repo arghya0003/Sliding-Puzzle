@@ -11,12 +11,17 @@ export default function Leaderboard({ showBySize = null }) {
         refreshLeaderboard();
     }, [filterSize]);
 
-    const refreshLeaderboard = () => {
-        const data = filterSize === 'all' 
-            ? getLeaderboard() 
-            : getLeaderboardBySize(parseInt(filterSize));
-        sortData(data, sortBy);
-        setEntries(data);
+    const refreshLeaderboard = async () => {
+        try {
+            const data = filterSize === 'all' 
+                ? await getLeaderboard() 
+                : await getLeaderboardBySize(parseInt(filterSize));
+            sortData(data, sortBy);
+            setEntries(data);
+        } catch (error) {
+            console.error('Failed to refresh leaderboard:', error);
+            setEntries([]);
+        }
     };
 
     const sortData = (data, sortType) => {
@@ -32,7 +37,7 @@ export default function Leaderboard({ showBySize = null }) {
                 sorted.sort((a, b) => a.time - b.time);
                 break;
             case 'date':
-                sorted.sort((a, b) => b.timestamp - a.timestamp);
+                sorted.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
                 break;
             default:
                 sorted.sort((a, b) => a.score - b.score);
@@ -45,10 +50,14 @@ export default function Leaderboard({ showBySize = null }) {
         sortData(entries, newSort);
     };
 
-    const handleClearLeaderboard = () => {
+    const handleClearLeaderboard = async () => {
         if (window.confirm('Are you sure you want to clear the entire leaderboard? This cannot be undone.')) {
-            clearLeaderboard();
-            refreshLeaderboard();
+            try {
+                await clearLeaderboard();
+                await refreshLeaderboard();
+            } catch (error) {
+                console.error('Failed to clear leaderboard:', error);
+            }
         }
     };
 

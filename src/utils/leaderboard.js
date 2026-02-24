@@ -1,9 +1,9 @@
 /**
- * Leaderboard utility for storing and retrieving player scores
+ * Leaderboard utility - API-based backend integration
  */
 
-const LEADERBOARD_KEY = 'puzzleLeaderboard';
-const MAX_ENTRIES = 100;
+// Support environment variables for deployment
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 /**
  * Leaderboard entry structure:
@@ -15,31 +15,21 @@ const MAX_ENTRIES = 100;
  *   time: number - time taken in seconds
  *   algorithm: string - 'bfs' or 'astar'
  *   heuristic: string - 'manhattan', 'misplaced', 'euclidean', 'combined'
- *   timestamp: number - when the entry was created
+ *   timestamp: string - ISO timestamp when entry was created
  *   score: number - calculated score (lower is better)
  * }
  */
 
 /**
- * Calculate score: weighted combination of moves and time
- * Lower score is better
+ * Get all leaderboard entries from backend
  */
-function calculateScore(moves, time, moves_weight = 0.6, time_weight = 0.4) {
-    // Normalize: assume reasonable puzzle completion is 50 moves, 300 seconds
-    const normalizedMoves = moves / 50;
-    const normalizedTime = time / 300;
-    return normalizedMoves * moves_weight + normalizedTime * time_weight;
-}
-
-/**
- * Get all leaderboard entries from localStorage
- */
-export function getLeaderboard() {
+export async function getLeaderboard() {
     try {
-        const data = localStorage.getItem(LEADERBOARD_KEY);
-        return data ? JSON.parse(data) : [];
+        const response = await fetch(`${API_BASE_URL}/leaderboard`);
+        if (!response.ok) throw new Error('Failed to fetch leaderboard');
+        return await response.json();
     } catch (error) {
-        console.error('Error reading leaderboard:', error);
+        console.error('Error fetching leaderboard:', error);
         return [];
     }
 }
@@ -47,70 +37,93 @@ export function getLeaderboard() {
 /**
  * Add a new entry to the leaderboard
  */
-export function addLeaderboardEntry(playerName, size, moves, time, algorithm, heuristic) {
-    const entries = getLeaderboard();
-    const newEntry = {
-        id: `${Date.now()}-${Math.random()}`,
-        playerName,
-        size,
-        moves,
-        time,
-        algorithm,
-        heuristic,
-        timestamp: Date.now(),
-        score: calculateScore(moves, time),
-    };
-
-    entries.push(newEntry);
-
-    // Sort by score (lower is better)
-    entries.sort((a, b) => a.score - b.score);
-
-    // Keep only top MAX_ENTRIES
-    const limited = entries.slice(0, MAX_ENTRIES);
-
+export async function addLeaderboardEntry(playerName, size, moves, time, algorithm, heuristic) {
     try {
-        localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(limited));
-        return newEntry;
+        const response = await fetch(`${API_BASE_URL}/leaderboard`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                playerName,
+                size,
+                moves,
+                time,
+                algorithm,
+                heuristic
+            })
+        });
+
+        if (!response.ok) throw new Error('Failed to add leaderboard entry');
+        const entry = await response.json();
+        console.log('✅ Score submitted:', entry);
+        return entry;
     } catch (error) {
-        console.error('Error saving to leaderboard:', error);
-        return newEntry;
+        console.error('Error adding leaderboard entry:', error);
+        throw error;
     }
 }
 
 /**
  * Get leaderboard entries filtered by puzzle size
  */
-export function getLeaderboardBySize(size) {
-    const entries = getLeaderboard();
-    return entries.filter(e => e.size === size);
-}
-
-/**
- * Clear all leaderboard entries
- */
-export function clearLeaderboard() {
+export async function getLeaderboardBySize(size) {
     try {
-        localStorage.removeItem(LEADERBOARD_KEY);
-        return true;
+        const response = await fetch(`${API_BASE_URL}/leaderboard?size=${size}`);
+        if (!response.ok) throw new Error('Failed to fetch leaderboard');
+        return await response.json();
     } catch (error) {
-        console.error('Error clearing leaderboard:', error);
-        return false;
+        console.error('Error fetching leaderboard by size:', error);
+        return [];
     }
 }
 
 /**
  * Get top N entries overall
  */
-export function getTopEntries(n = 10) {
-    const entries = getLeaderboard();
-    return entries.slice(0, n);
+export async function getTopEntries(n = 10) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/leaderboard/top?limit=${n}`);
+        if (!response.ok) throw new Error('Failed to fetch top entries');
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching top entries:', error);
+        return [];
+    }
 }
 
 /**
  * Get top N entries for a specific puzzle size
  */
-export function getTopEntriesBySize(size, n = 10) {
-    const entries = getLeaderboardBySize(size);
-    return entries.slice(0, n);
+export async function getTopEntriesBySize(size, n = 10) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/leaderboard/top?size=${size}&limit=${n}`);
+        if (!response.ok) throw new Error('Failed to fetch top entries');
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching top entries by size:', error);
+        return [];
+    }
+}
+
+/**
+ * Get leaderboard statistics
+ */
+export async function getLeaderboardStats() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/leaderboard/stats`);
+        if (!response.ok) throw new Error('Failed to fetch stats');
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching stats:', error);
+        return null;
+    }
+}
+
+/**
+ * Clear all leaderboard entries (admin function)
+ */
+export async function clearLeaderboard() {
+    console.warn('⚠️ clearLeaderboard() requires backend implementation');
+    return false;
 }

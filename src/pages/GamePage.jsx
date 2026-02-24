@@ -82,7 +82,8 @@ export default function GamePage() {
             setWon(true);
             victorySound.play();
             // Save to leaderboard
-            addLeaderboardEntry(playerName, size, moves + 1, elapsed, selectedAlgo.algo, selectedAlgo.heuristic);
+            addLeaderboardEntry(playerName, size, moves + 1, elapsed, selectedAlgo.algo, selectedAlgo.heuristic)
+                .catch(error => console.error('Failed to save score:', error));
         }
     }, [running, size, moves, elapsed, playerName, selectedAlgo]);
 
@@ -170,7 +171,8 @@ export default function GamePage() {
                 setWon(true);
                 victorySound.play();
                 // Save to leaderboard
-                addLeaderboardEntry(playerName, size, moves + 1 + (steps.length - i), elapsed, selectedAlgo.algo, selectedAlgo.heuristic);
+                addLeaderboardEntry(playerName, size, moves + 1 + (steps.length - i), elapsed, selectedAlgo.algo, selectedAlgo.heuristic)
+                    .catch(error => console.error('Failed to save score:', error));
             }
         }, SOLVE_INTERVAL_MS[size] ?? 300);
     }, [tiles, size, isSolving, running, selectedAlgo, playerName, moves, elapsed]);

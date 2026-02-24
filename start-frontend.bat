@@ -1,0 +1,3 @@
+@echo off
+echo Starting Frontend Dev Server (Port 5173)...
+npm run dev

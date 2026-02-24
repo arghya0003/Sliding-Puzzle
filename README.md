@@ -121,25 +121,45 @@ git clone https://github.com/arghya0003/Sliding-Puzzle.git
 cd Sliding-Puzzle
 ```
 
-2. **Install dependencies**
+2. **Install dependencies (Frontend & Backend)**
 ```bash
-npm install
+npm run setup
 ```
 
-3. **Start development server**
+3. **Start Backend Server (Terminal 1)**
+```bash
+cd backend
+npm run dev
+# Backend runs on http://localhost:3001
+```
+
+4. **Start Frontend Development Server (Terminal 2)**
 ```bash
 npm run dev
+# Frontend runs on http://localhost:5173
 ```
 
-4. **Build for production**
+5. **Build for production**
 ```bash
 npm run build
 ```
 
-5. **Preview production build**
-```bash
-npm run preview
-```
+## 🚀 Deployment
+
+### Quick Deploy Guide
+The app is **full-stack ready** with Express.js backend. Deploy in 30 minutes:
+
+**Backend + Frontend Deployment:**
+- 📖 See [DEPLOY_CHECKLIST.md](./DEPLOY_CHECKLIST.md) for step-by-step instructions
+- 📋 See [DEPLOYMENT.md](./DEPLOYMENT.md) for platform comparisons
+
+**Recommended Stack:**
+- Frontend: **Vercel** (free)
+- Backend: **Railway** ($5/month) or **Render** (free)
+
+**Key Files:**
+- Frontend: [.env.production.example](.env.production.example)
+- Backend: [backend/.env.example](backend/.env.example)
 
 ## 📖 How to Play
 
