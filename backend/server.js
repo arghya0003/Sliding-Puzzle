@@ -10,17 +10,44 @@ const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(express.json());
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true
-}));
+
+// CORS configuration - allow frontend URL or all origins in development
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || '*',
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+
+// Root route
+app.get('/', (req, res) => {
+  res.json({ 
+    message: '8-Puzzle Backend API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      leaderboard: '/api/leaderboard',
+      leaderboard_top: '/api/leaderboard/top',
+      stats: '/api/leaderboard/stats'
+    }
+  });
+});
+
+// Admin route for debugging
+app.get('/debug', (req, res) => {
+  res.json({
+    node_env: process.env.NODE_ENV,
+    port: process.env.PORT,
+    frontend_url: process.env.FRONTEND_URL || 'Not set'
+  });
+});
 
 // Routes
 app.use('/api/leaderboard', leaderboardRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'Backend is running' });
+  res.json({ status: 'Backend is running', timestamp: new Date().toISOString() });
 });
 
 // Error handling middleware
