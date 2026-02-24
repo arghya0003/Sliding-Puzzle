@@ -1,5 +1,48 @@
 import { v4 as uuidv4 } from 'uuid';
 
+// Validation helper
+function validateInput(data) {
+  const { playerName, size, moves, time, algorithm, heuristic } = data;
+  
+  // Check required fields
+  if (!playerName || size === undefined || moves === undefined || time === undefined) {
+    return { valid: false, error: 'Missing required fields' };
+  }
+  
+  // Validate playerName
+  if (typeof playerName !== 'string' || playerName.trim().length === 0 || playerName.length > 50) {
+    return { valid: false, error: 'Invalid player name (1-50 chars)' };
+  }
+  
+  // Validate size
+  if (![3, 4, 5].includes(parseInt(size))) {
+    return { valid: false, error: 'Invalid puzzle size (must be 3, 4, or 5)' };
+  }
+  
+  // Validate moves and time
+  if (typeof moves !== 'number' || moves < 0 || moves > 10000) {
+    return { valid: false, error: 'Invalid moves count' };
+  }
+  
+  if (typeof time !== 'number' || time < 0 || time > 3600) {
+    return { valid: false, error: 'Invalid time (max 1 hour)' };
+  }
+  
+  // Validate algorithm and heuristic
+  const validAlgos = ['manual', 'bfs', 'astar'];
+  const validHeuristics = ['none', 'manhattan', 'misplaced', 'euclidean', 'combined'];
+  
+  if (algorithm && !validAlgos.includes(algorithm)) {
+    return { valid: false, error: 'Invalid algorithm' };
+  }
+  
+  if (heuristic && !validHeuristics.includes(heuristic)) {
+    return { valid: false, error: 'Invalid heuristic' };
+  }
+  
+  return { valid: true };
+}
+
 // In-memory storage (replace with database later)
 let leaderboard = [];
 
@@ -9,8 +52,21 @@ export function addEntry(req, res) {
     const { playerName, size, moves, time, algorithm, heuristic } = req.body;
 
     // Validate input
-    if (!playerName || !size || moves === undefined || time === undefined) {
-      return res.status(400).json({ error: 'Missing required fields' });
+    const validation = validateInput({ playerName, size, moves, time, algorithm, heuristic });
+    if (!validation.valid) {
+      return res.status(400).json({ error: validation.error });
+    }
+
+    // Check for duplicate submissions (same player, same size, same moves within 10 seconds)
+    const recentDuplicate = leaderboard.find(entry => 
+      entry.playerName === playerName &&
+      entry.size === size &&
+      entry.moves === moves &&
+      (Date.now() - new Date(entry.timestamp).getTime()) < 10000
+    );
+    
+    if (recentDuplicate) {
+      return res.status(409).json({ error: 'Duplicate submission detected' });
     }
 
     // Calculate score
@@ -20,10 +76,10 @@ export function addEntry(req, res) {
 
     const entry = {
       id: uuidv4(),
-      playerName,
-      size,
-      moves,
-      time,
+      playerName: playerName.trim(),
+      size: parseInt(size),
+      moves: parseInt(moves),
+      time: parseInt(time),
       algorithm: algorithm || 'manual',
       heuristic: heuristic || 'none',
       score,
