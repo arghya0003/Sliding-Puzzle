@@ -11,11 +11,31 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(express.json());
 
-// CORS configuration - allow frontend URL or all origins in development
+// CORS configuration
+const getAllowedOrigins = () => {
+  if (!process.env.FRONTEND_URL) {
+    return '*'; // Allow all in development
+  }
+  
+  // Remove trailing slash from FRONTEND_URL if present
+  const baseUrl = process.env.FRONTEND_URL.replace(/\/$/, '');
+  
+  return (origin, callback) => {
+    // Allow requests from the frontend URL (with or without trailing slash)
+    if (!origin || origin === baseUrl || origin === baseUrl + '/') {
+      callback(null, true);
+    } else {
+      callback(null, true); // Allow for now to debug
+    }
+  };
+};
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || '*',
+  origin: getAllowedOrigins(),
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type']
 };
 app.use(cors(corsOptions));
 
