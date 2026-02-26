@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import prisma from '../config/prisma.js';
 
 // Validation helper
 function validateInput(data) {
@@ -43,11 +43,11 @@ function validateInput(data) {
   return { valid: true };
 }
 
-// In-memory storage (replace with database later)
-let leaderboard = [];
+// In-memory storage (replaced with Prisma database)
+// No longer needed - using PostgreSQL with Prisma
 
 // Add new leaderboard entry
-export function addEntry(req, res) {
+export async function addEntry(req, res) {
   try {
     const { playerName, size, moves, time, algorithm, heuristic } = req.body;
 
@@ -57,13 +57,17 @@ export function addEntry(req, res) {
       return res.status(400).json({ error: validation.error });
     }
 
-    // Check for duplicate submissions (same player, same size, same moves within 10 seconds)
-    const recentDuplicate = leaderboard.find(entry => 
-      entry.playerName === playerName &&
-      entry.size === size &&
-      entry.moves === moves &&
-      (Date.now() - new Date(entry.timestamp).getTime()) < 10000
-    );
+    // Check for duplicate submissions in database (same player, same size, same moves within 10 seconds)
+    const recentDuplicate = await prisma.leaderboardEntry.findFirst({
+      where: {
+        playerName: playerName.trim(),
+        size: parseInt(size),
+        moves: parseInt(moves),
+        timestamp: {
+          gte: new Date(Date.now() - 10000) // Last 10 seconds
+        }
+      }
+    });
     
     if (recentDuplicate) {
       return res.status(409).json({ error: 'Duplicate submission detected' });
@@ -74,21 +78,18 @@ export function addEntry(req, res) {
     const normalizedTime = time / 300;
     const score = normalizedMoves * 0.6 + normalizedTime * 0.4;
 
-    const entry = {
-      id: uuidv4(),
-      playerName: playerName.trim(),
-      size: parseInt(size),
-      moves: parseInt(moves),
-      time: parseInt(time),
-      algorithm: algorithm || 'manual',
-      heuristic: heuristic || 'none',
-      score,
-      timestamp: new Date().toISOString()
-    };
-
-    leaderboard.push(entry);
-    leaderboard.sort((a, b) => a.score - b.score);
-    leaderboard = leaderboard.slice(0, 100); // Keep top 100
+    // Create entry in database
+    const entry = await prisma.leaderboardEntry.create({
+      data: {
+        playerName: playerName.trim(),
+        size: parseInt(size),
+        moves: parseInt(moves),
+        time: parseInt(time),
+        algorithm: algorithm || 'manual',
+        heuristic: heuristic || 'none',
+        score: parseFloat(score.toFixed(4))
+      }
+    });
 
     console.log(`✅ New entry: ${playerName} - Score: ${score.toFixed(2)}`);
     res.status(201).json(entry);
@@ -99,21 +100,21 @@ export function addEntry(req, res) {
 }
 
 // Get all leaderboard entries
-export function getLeaderboard(req, res) {
+export async function getLeaderboard(req, res) {
   try {
-    const { size, algorithm } = req.query;
+    const { size, algorithm, limit = 100 } = req.query;
     
-    let filtered = leaderboard;
+    const where = {};
+    if (size) where.size = parseInt(size);
+    if (algorithm) where.algorithm = algorithm;
 
-    if (size) {
-      filtered = filtered.filter(entry => entry.size === parseInt(size));
-    }
+    const entries = await prisma.leaderboardEntry.findMany({
+      where,
+      orderBy: { score: 'asc' },
+      take: parseInt(limit)
+    });
 
-    if (algorithm) {
-      filtered = filtered.filter(entry => entry.algorithm === algorithm);
-    }
-
-    res.json(filtered);
+    res.json(entries);
   } catch (error) {
     console.error('Error fetching leaderboard:', error);
     res.status(500).json({ error: 'Failed to fetch leaderboard' });
@@ -121,14 +122,17 @@ export function getLeaderboard(req, res) {
 }
 
 // Get top entries by size
-export function getTopEntries(req, res) {
+export async function getTopEntries(req, res) {
   try {
     const { size = 3, limit = 10 } = req.query;
-    const filtered = leaderboard
-      .filter(entry => entry.size === parseInt(size))
-      .slice(0, parseInt(limit));
+    
+    const entries = await prisma.leaderboardEntry.findMany({
+      where: { size: parseInt(size) },
+      orderBy: { score: 'asc' },
+      take: parseInt(limit)
+    });
 
-    res.json(filtered);
+    res.json(entries);
   } catch (error) {
     console.error('Error fetching top entries:', error);
     res.status(500).json({ error: 'Failed to fetch top entries' });
@@ -136,21 +140,31 @@ export function getTopEntries(req, res) {
 }
 
 // Get statistics
-export function getStats(req, res) {
+export async function getStats(req, res) {
   try {
-    const totalEntries = leaderboard.length;
-    const averageScore = leaderboard.length > 0
-      ? (leaderboard.reduce((sum, entry) => sum + entry.score, 0) / totalEntries).toFixed(2)
-      : 0;
-
-    const sizeStats = {};
-    [3, 4, 5].forEach(size => {
-      const entries = leaderboard.filter(entry => entry.size === size);
-      sizeStats[size] = {
-        count: entries.length,
-        bestScore: entries.length > 0 ? entries[0].score.toFixed(2) : 0
-      };
+    const totalEntries = await prisma.leaderboardEntry.count();
+    
+    // Get average score
+    const avgResult = await prisma.leaderboardEntry.aggregate({
+      _avg: { score: true }
     });
+    const averageScore = avgResult._avg.score ? avgResult._avg.score.toFixed(2) : 0;
+
+    // Get stats for each size
+    const sizeStats = {};
+    for (const size of [3, 4, 5]) {
+      const count = await prisma.leaderboardEntry.count({ where: { size } });
+      
+      const bestEntry = await prisma.leaderboardEntry.findFirst({
+        where: { size },
+        orderBy: { score: 'asc' }
+      });
+
+      sizeStats[size] = {
+        count,
+        bestScore: bestEntry ? bestEntry.score.toFixed(2) : 0
+      };
+    }
 
     res.json({
       totalEntries,

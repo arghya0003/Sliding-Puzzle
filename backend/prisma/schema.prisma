@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model LeaderboardEntry {
+  id        String   @id @default(cuid())
+  playerName String  @db.VarChar(50)
+  size      Int      // 3, 4, or 5
+  moves     Int
+  time      Int      // seconds
+  algorithm String   // 'manual', 'bfs', 'astar'
+  heuristic String   // 'none', 'manhattan', 'misplaced', 'euclidean', 'combined'
+  score     Float
+  timestamp DateTime @default(now())
+  
+  // Indexes for faster queries
+  @@index([score])
+  @@index([size])
+  @@index([timestamp])
+  @@index([playerName])
+}

@@ -6,7 +6,10 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:deploy": "prisma migrate deploy",
+    "build": "echo 'Building...' && npm run prisma:generate"
   },
   "dependencies": {
     "cors": "^2.8.5",
