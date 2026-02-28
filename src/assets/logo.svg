@@ -1,0 +1,28 @@
+<svg viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .logo-text { font-family: 'JetBrains Mono', monospace; font-weight: bold; font-size: 36px; letter-spacing: 2px; }
+      .logo-puzzle { fill: none; }
+      .logo-text-main { fill: #f1f5f9; font-weight: 700; }
+      .glow { filter: drop-shadow(0 0 8px rgba(179, 255, 0, 0.4)); }
+    </style>
+    <filter id="neon-glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Puzzle piece icon with neon effect -->
+  <g class="logo-puzzle glow">
+    <path d="M 15 20 L 30 20 L 30 35 L 45 35 L 45 20 L 60 20 L 60 45 L 45 45 L 45 60 L 30 60 L 30 45 L 15 45 Z" 
+          stroke="#b3ff00" stroke-width="2.5" stroke-linejoin="round" filter="url(#neon-glow)"/>
+    <circle cx="22" cy="27" r="2.5" fill="#b3ff00"/>
+    <circle cx="37" cy="52" r="2.5" fill="#b3ff00"/>
+  </g>
+  
+  <!-- Text: 8-PUZZLE ARCADE -->
+  <text x="75" y="55" class="logo-text logo-text-main">8-PUZZLE ARCADE</text>
+</svg>

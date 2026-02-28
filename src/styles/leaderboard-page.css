@@ -1,7 +1,7 @@
 /* Leaderboard Page */
 .leaderboard-page {
     min-height: 100vh;
-    background: linear-gradient(135deg, #f3e8ff 0%, #dbeafe 100%);
+    background: #080b14;
     padding: 20px;
     position: relative;
     overflow: hidden;
@@ -53,29 +53,29 @@
 
 .leaderboard-header-bar .back-btn {
     padding: 10px 16px;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(10px);
-    border: 2px solid #e5e7eb;
+    border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     font-size: 16px;
     font-weight: 500;
-    color: #374151;
+    color: #f1f5f9;
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
 }
 
 .leaderboard-header-bar .back-btn:hover {
-    background: white;
-    border-color: #c4b5fd;
-    color: #7c3aed;
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(139, 92, 246, 0.5);
+    color: #c4b5fd;
     transform: translateX(-2px);
 }
 
 .leaderboard-header-bar h1 {
     margin: 0;
     font-size: 32px;
-    color: #1f2937;
+    color: #f1f5f9;
     font-weight: 700;
 }
 

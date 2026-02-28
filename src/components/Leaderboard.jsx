@@ -50,17 +50,6 @@ export default function Leaderboard({ showBySize = null }) {
         sortData(entries, newSort);
     };
 
-    const handleClearLeaderboard = async () => {
-        if (window.confirm('Are you sure you want to clear the entire leaderboard? This cannot be undone.')) {
-            try {
-                await clearLeaderboard();
-                await refreshLeaderboard();
-            } catch (error) {
-                console.error('Failed to clear leaderboard:', error);
-            }
-        }
-    };
-
     const formatTime = (seconds) => {
         return `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
     };
@@ -128,12 +117,6 @@ export default function Leaderboard({ showBySize = null }) {
                         Recent
                     </button>
                 </div>
-
-                {!showBySize && (
-                    <button className="clear-btn" onClick={handleClearLeaderboard}>
-                        🗑️ Clear All
-                    </button>
-                )}
             </div>
 
             {entries.length === 0 ? (

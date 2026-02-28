@@ -1,16 +1,17 @@
 /* Leaderboard Component */
 .leaderboard-container {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     margin: 20px 0;
 }
 
 .leaderboard-container h2 {
     margin: 0 0 20px 0;
-    color: #1f2937;
+    color: #f1f5f9;
     font-size: 24px;
     text-align: center;
 }
@@ -34,30 +35,38 @@
 .filter-group label,
 .sort-group label {
     font-weight: 500;
-    color: #4b5563;
+    color: #f1f5f9;
     font-size: 14px;
 }
 
 .filter-group select {
     padding: 8px 12px;
-    border: 2px solid #e5e7eb;
+    border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     font-size: 14px;
-    background: white;
+    background: rgba(255, 255, 255, 0.08);
+    color: #f1f5f9;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
+/* Style the dropdown options for a cohesive dark theme */
+.filter-group select option {
+    background-color: #0f111a;
+    color: #f1f5f9;
+    padding: 8px;
+}
+
 .filter-group select:hover {
-    border-color: #c4b5fd;
+    border-color: rgba(139, 92, 246, 0.5);
 }
 
 .sort-btn {
     padding: 8px 16px;
-    border: 2px solid #e5e7eb;
+    border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    background: white;
-    color: #4b5563;
+    background: rgba(255, 255, 255, 0.08);
+    color: #f1f5f9;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -65,8 +74,8 @@
 }
 
 .sort-btn:hover {
-    border-color: #c4b5fd;
-    color: #7c3aed;
+    border-color: rgba(139, 92, 246, 0.5);
+    color: #c4b5fd;
 }
 
 .sort-btn.active {
@@ -77,10 +86,10 @@
 
 .clear-btn {
     padding: 8px 16px;
-    border: 2px solid #fca5a5;
+    border: 2px solid rgba(239, 68, 68, 0.5);
     border-radius: 8px;
-    background: white;
-    color: #dc2626;
+    background: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -88,14 +97,14 @@
 }
 
 .clear-btn:hover {
-    background: rgba(252, 165, 165, 0.1);
-    border-color: #dc2626;
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.7);
 }
 
 .empty-leaderboard {
     text-align: center;
     padding: 40px 20px;
-    color: #9ca3af;
+    color: #94a3b8;
 }
 
 .empty-leaderboard p {
@@ -112,14 +121,14 @@
     grid-template-columns: 60px 150px 120px 150px 80px 100px 80px;
     gap: 12px;
     padding: 12px 16px;
-    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 8px 8px 0 0;
     font-weight: 600;
-    color: #374151;
+    color: #cbd5e1;
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    border-bottom: 2px solid #d1d5db;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .leaderboard-rows {
@@ -133,8 +142,8 @@
     gap: 12px;
     padding: 12px 16px;
     align-items: center;
-    border-bottom: 1px solid #e5e7eb;
-    color: #1f2937;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #f1f5f9;
     font-size: 14px;
     transition: all 0.2s ease;
 }
@@ -181,12 +190,12 @@
 }
 
 .puzzle {
-    color: #6b7280;
+    color: #cbd5e1;
     font-size: 13px;
 }
 
 .algorithm {
-    color: #6b7280;
+    color: #cbd5e1;
     font-size: 13px;
 }
 
