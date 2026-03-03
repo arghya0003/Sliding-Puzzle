@@ -2,7 +2,7 @@
 .leaderboard-page {
     min-height: 100vh;
     background: #080b14;
-    padding: 20px;
+    padding: 70px 20px 20px;
     position: relative;
     overflow: hidden;
 }

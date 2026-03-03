@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Leaderboard from '../components/Leaderboard';
+import Logo from '../components/Logo';
 import '../styles/leaderboard-page.css';
 
 export default function LeaderboardPage() {
@@ -8,6 +9,7 @@ export default function LeaderboardPage() {
 
     return (
         <div className="leaderboard-page">
+            <Logo />
             <div className="bg-orb orb1" />
             <div className="bg-orb orb2" />
 

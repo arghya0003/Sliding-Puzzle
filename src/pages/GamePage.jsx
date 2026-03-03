@@ -9,6 +9,7 @@ import {
 import { solvePuzzle, manhattanDistance, misplacedTiles } from '../utils/solver';
 import { addLeaderboardEntry } from '../utils/leaderboard';
 import { clickSound, victorySound } from '../utils/sounds';
+import Logo from '../components/Logo';
 import '../styles/game.css';
 
 const SOLVE_INTERVAL_MS = { 3: 320, 4: 280, 5: 240 };
@@ -186,6 +187,7 @@ export default function GamePage() {
 
     return (
         <div className="game-root">
+            <Logo />
             <div className="bg-orb orb1" />
             <div className="bg-orb orb2" />
 
