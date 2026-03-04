@@ -28,16 +28,10 @@ export default function Logo() {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
             >
-                {/* Outer rounded square — deep indigo */}
                 <rect x="0" y="0" width="44" height="44" rx="10" fill="#1e1145" />
-                {/* 4 puzzle tiles in 2x2, slightly offset */}
-                {/* Top-left */}
                 <rect x="6" y="6" width="14" height="14" rx="3" fill="#5b3daf" />
-                {/* Top-right */}
                 <rect x="23" y="6" width="14" height="14" rx="3" fill="#4c3199" />
-                {/* Bottom-left — bright accent tile */}
                 <rect x="6" y="23" width="14" height="14" rx="3" fill="#8b5cf6" />
-                {/* Bottom-right — darker recessed tile */}
                 <rect x="23" y="23" width="14" height="14" rx="3" fill="#2d1a6b" />
             </svg>
             <div className="logo-text">

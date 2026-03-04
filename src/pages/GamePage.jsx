@@ -145,7 +145,7 @@ export default function GamePage() {
     }, [future]);
 
     const handleSolve = useCallback(() => {
-        if (isSolving || size === 5) return;
+        if (isSolving) return;
         setSolverMsg('');
         const solution = solvePuzzle(tiles, size, selectedAlgo.algo, selectedAlgo.heuristic);
         if (!solution || solution.length <= 1) {
@@ -186,7 +186,7 @@ export default function GamePage() {
     const diffList = DIFFICULTIES[size];
 
     return (
-        <div className="game-root">
+        <div className="game-root" data-theme={modeColor}>
             <Logo />
             <div className="bg-orb orb1" />
             <div className="bg-orb orb2" />
@@ -223,12 +223,12 @@ export default function GamePage() {
                     <div className="stat-divider" />
                     <div className="stat-card" title="Manhattan Distance">
                         <span className="stat-label">MD</span>
-                        <span className="stat-value hval" style={{ color: md === 0 ? '#10b981' : '#c4b5fd' }}>{md}</span>
+                        <span className="stat-value hval" style={{ color: md === 0 ? '#10b981' : 'var(--theme-light)' }}>{md}</span>
                     </div>
                     <div className="stat-divider" />
                     <div className="stat-card" title="Misplaced Tiles">
                         <span className="stat-label">MT</span>
-                        <span className="stat-value hval" style={{ color: mt === 0 ? '#10b981' : '#67e8f9' }}>{mt}</span>
+                        <span className="stat-value hval" style={{ color: mt === 0 ? '#10b981' : 'var(--theme-light)' }}>{mt}</span>
                     </div>
                 </div>
 
@@ -255,24 +255,22 @@ export default function GamePage() {
                 </div>
 
                 {/* Algorithm Selection */}
-                {size < 5 && (
-                    <div className="algo-group">
-                        <label className="algo-label">⚙️ Solver Algorithm:</label>
-                        <div className="algo-buttons">
-                            {ALGORITHMS.map((algo) => (
-                                <button
-                                    key={algo.id}
-                                    className={`algo-btn${selectedAlgo.id === algo.id ? ' active' : ''}`}
-                                    onClick={() => setSelectedAlgo(algo)}
-                                    disabled={isSolving}
-                                    title={algo.label}
-                                >
-                                    {algo.label}
-                                </button>
-                            ))}
-                        </div>
+                <div className="algo-group">
+                    <label className="algo-label">⚙️ Solver Algorithm:</label>
+                    <div className="algo-buttons">
+                        {ALGORITHMS.map((algo) => (
+                            <button
+                                key={algo.id}
+                                className={`algo-btn${selectedAlgo.id === algo.id ? ' active' : ''}`}
+                                onClick={() => setSelectedAlgo(algo)}
+                                disabled={isSolving}
+                                title={algo.label}
+                            >
+                                {algo.label}
+                            </button>
+                        ))}
                     </div>
-                )}
+                </div>
 
                 {/* Action Buttons */}
                 <div className="action-group">
@@ -294,21 +292,15 @@ export default function GamePage() {
                 </div>
 
                 {/* Auto Solve */}
-                {size < 5 ? (
-                    <motion.button
-                        className={`action-btn solve-btn${isSolving ? ' solving-active' : ''}`}
-                        onClick={handleSolve}
-                        disabled={isSolving}
-                        whileHover={{ scale: 1.04 }}
-                        whileTap={{ scale: 0.96 }}
-                    >
-                        {isSolving ? `⚡ Solving… (${solverStepsLeft} steps left)` : `⚡ Auto Solve (${selectedAlgo.label})`}
-                    </motion.button>
-                ) : (
-                    <div className="solve-disabled">
-                        🔒 Auto-Solve disabled for 5×5 (computationally infeasible)
-                    </div>
-                )}
+                <motion.button
+                    className={`action-btn solve-btn${isSolving ? ' solving-active' : ''}`}
+                    onClick={handleSolve}
+                    disabled={isSolving}
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.96 }}
+                >
+                    {isSolving ? `⚡ Solving… (${solverStepsLeft} steps left)` : `⚡ Auto Solve (${selectedAlgo.label})`}
+                </motion.button>
 
                 {solverMsg && <p className="solver-msg">{solverMsg}</p>}
 

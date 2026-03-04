@@ -4,6 +4,31 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
 
+/* ── Theme Variables ── */
+.game-root[data-theme="violet"] {
+    --theme-h: 263;
+    --theme-rgb: 139, 92, 246;
+    --theme-light: #c4b5fd;
+    --theme-text: #e2d9f3;
+    --theme-glow: rgba(139, 92, 246, 0.35);
+}
+
+.game-root[data-theme="cyan"] {
+    --theme-h: 188;
+    --theme-rgb: 6, 182, 212;
+    --theme-light: #67e8f9;
+    --theme-text: #d5f5fa;
+    --theme-glow: rgba(6, 182, 212, 0.35);
+}
+
+.game-root[data-theme="amber"] {
+    --theme-h: 38;
+    --theme-rgb: 245, 158, 11;
+    --theme-light: #fcd34d;
+    --theme-text: #fef3c7;
+    --theme-glow: rgba(245, 158, 11, 0.35);
+}
+
 /* ── Root ── */
 .game-root {
     min-height: 100vh;
@@ -113,7 +138,7 @@
     align-items: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.09);
+    border: 1px solid rgba(var(--theme-rgb), 0.12);
     border-radius: 18px;
     padding: 0.72rem 1.5rem;
     backdrop-filter: blur(20px);
@@ -169,10 +194,10 @@
     gap: 9px;
     padding: 14px;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.09);
+    border: 1px solid rgba(var(--theme-rgb), 0.12);
     border-radius: 24px;
     backdrop-filter: blur(24px);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(var(--theme-rgb), 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.07);
     flex-shrink: 0;
 }
 
@@ -192,17 +217,17 @@
 }
 
 .tile-filled {
-    background: linear-gradient(145deg, rgba(139, 92, 246, 0.22) 0%, rgba(99, 56, 220, 0.28) 100%);
-    border: 1px solid rgba(139, 92, 246, 0.38);
-    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    background: linear-gradient(145deg, rgba(var(--theme-rgb), 0.22) 0%, rgba(var(--theme-rgb), 0.28) 100%);
+    border: 1px solid rgba(var(--theme-rgb), 0.38);
+    box-shadow: 0 4px 14px rgba(var(--theme-rgb), 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12);
     cursor: pointer;
     transition: border-color 0.15s, box-shadow 0.15s;
     will-change: transform;
 }
 
 .tile-filled:hover {
-    border-color: rgba(139, 92, 246, 0.7);
-    box-shadow: 0 6px 22px rgba(139, 92, 246, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    border-color: rgba(var(--theme-rgb), 0.7);
+    box-shadow: 0 6px 22px rgba(var(--theme-rgb), 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .tile-filled.solving {
@@ -225,7 +250,7 @@
 
 .tile-number {
     font-weight: 700;
-    color: #e2d9f3;
+    color: var(--theme-text, #e2d9f3);
     user-select: none;
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
@@ -259,9 +284,9 @@
 }
 
 .diff-btn.active {
-    background: rgba(139, 92, 246, 0.2);
-    border-color: rgba(139, 92, 246, 0.5);
-    color: #c4b5fd;
+    background: rgba(var(--theme-rgb), 0.2);
+    border-color: rgba(var(--theme-rgb), 0.5);
+    color: var(--theme-light, #c4b5fd);
 }
 
 .diff-btn:disabled {
@@ -315,9 +340,9 @@
 }
 
 .algo-btn.active {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.2));
-    border-color: rgba(139, 92, 246, 0.5);
-    color: #c4b5fd;
+    background: linear-gradient(135deg, rgba(var(--theme-rgb), 0.3), rgba(var(--theme-rgb), 0.15));
+    border-color: rgba(var(--theme-rgb), 0.5);
+    color: var(--theme-light, #c4b5fd);
 }
 
 .algo-btn:disabled {
@@ -357,15 +382,15 @@
 }
 
 .shuffle-btn {
-    border-color: rgba(139, 92, 246, 0.35);
-    background: rgba(139, 92, 246, 0.1);
-    color: #c4b5fd;
+    border-color: rgba(var(--theme-rgb), 0.35);
+    background: rgba(var(--theme-rgb), 0.1);
+    color: var(--theme-light, #c4b5fd);
 }
 
 .shuffle-btn:hover:not(:disabled) {
-    background: rgba(139, 92, 246, 0.22);
-    border-color: rgba(139, 92, 246, 0.6);
-    box-shadow: 0 0 16px rgba(139, 92, 246, 0.28);
+    background: rgba(var(--theme-rgb), 0.22);
+    border-color: rgba(var(--theme-rgb), 0.6);
+    box-shadow: 0 0 16px rgba(var(--theme-rgb), 0.28);
 }
 
 .reset-btn {
@@ -381,28 +406,28 @@
 
 .undo-btn,
 .redo-btn {
-    border-color: rgba(6, 182, 212, 0.28);
-    background: rgba(6, 182, 212, 0.07);
-    color: #67e8f9;
+    border-color: rgba(var(--theme-rgb), 0.2);
+    background: rgba(var(--theme-rgb), 0.05);
+    color: var(--theme-light, #67e8f9);
 }
 
 .undo-btn:hover:not(:disabled),
 .redo-btn:hover:not(:disabled) {
-    background: rgba(6, 182, 212, 0.16);
-    border-color: rgba(6, 182, 212, 0.48);
+    background: rgba(var(--theme-rgb), 0.14);
+    border-color: rgba(var(--theme-rgb), 0.4);
 }
 
 .solve-btn {
-    border-color: rgba(245, 158, 11, 0.38);
-    background: rgba(245, 158, 11, 0.09);
-    color: #fcd34d;
+    border-color: rgba(var(--theme-rgb), 0.38);
+    background: rgba(var(--theme-rgb), 0.12);
+    color: var(--theme-light, #fcd34d);
     width: 100%;
 }
 
 .solve-btn:hover:not(:disabled) {
-    background: rgba(245, 158, 11, 0.2);
-    border-color: rgba(245, 158, 11, 0.6);
-    box-shadow: 0 0 18px rgba(245, 158, 11, 0.28);
+    background: rgba(var(--theme-rgb), 0.22);
+    border-color: rgba(var(--theme-rgb), 0.6);
+    box-shadow: 0 0 18px rgba(var(--theme-rgb), 0.32);
 }
 
 .solve-btn.solving-active {
@@ -411,11 +436,11 @@
 
 @keyframes solveGlow {
     from {
-        box-shadow: 0 0 8px rgba(245, 158, 11, 0.28);
+        box-shadow: 0 0 8px var(--theme-glow, rgba(245, 158, 11, 0.28));
     }
 
     to {
-        box-shadow: 0 0 24px rgba(245, 158, 11, 0.6);
+        box-shadow: 0 0 24px var(--theme-glow, rgba(245, 158, 11, 0.6));
     }
 }
 
@@ -466,13 +491,13 @@
 
 .modal-card {
     background: linear-gradient(145deg, rgba(30, 20, 60, 0.97) 0%, rgba(14, 10, 32, 0.99) 100%);
-    border: 1px solid rgba(139, 92, 246, 0.35);
+    border: 1px solid rgba(var(--theme-rgb), 0.35);
     border-radius: 28px;
     padding: 2.4rem 2rem;
     max-width: 360px;
     width: 100%;
     text-align: center;
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 0 60px rgba(139, 92, 246, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 0 60px rgba(var(--theme-rgb), 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -526,9 +551,9 @@
 
 .modal-algorithm {
     font-size: 0.8rem;
-    color: #c4b5fd;
-    background: rgba(139, 92, 246, 0.15);
-    border: 1px solid rgba(139, 92, 246, 0.3);
+    color: var(--theme-light, #c4b5fd);
+    background: rgba(var(--theme-rgb), 0.15);
+    border: 1px solid rgba(var(--theme-rgb), 0.3);
     padding: 0.4rem 0.8rem;
     border-radius: 8px;
     font-weight: 600;
