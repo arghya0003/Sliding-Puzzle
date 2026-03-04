@@ -10,9 +10,11 @@ A premium, interactive sliding puzzle game built with React and Vite. Features m
 ## ✨ Features
 
 ### 🎮 Game Modes
-- **8-Puzzle (3×3)** - Classic puzzle with 8 tiles
-- **15-Puzzle (4×4)** - Traditional version with 15 tiles
-- **24-Puzzle (5×5)** - Advanced challenge with 24 tiles
+- **8-Puzzle (3×3)** - Classic puzzle with 8 tiles (🟣 Violet theme)
+- **15-Puzzle (4×4)** - Traditional version with 15 tiles (🔵 Cyan theme)
+- **24-Puzzle (5×5)** - Advanced challenge with 24 tiles (🟠 Amber theme)
+
+Each puzzle mode features a **unique color theme** powered by CSS custom properties, giving every mode its own distinct visual identity.
 
 ### 🎯 Difficulty Levels
 - **Easy** - Few shuffles for quick games
@@ -46,7 +48,9 @@ Choose from multiple solving algorithms:
 5. **A* with Combined Heuristic** ⭐ (Recommended)
    - Uses max(Manhattan, Misplaced) for tighter bounds
    - Provides best performance
-   - Optimal for all puzzle sizes including 4×4
+   - Optimal for all puzzle sizes including 4×4 and 5×5
+
+> **Note:** All algorithms and auto-solve are available for every puzzle size, including the 24-puzzle (5×5).
 
 ### 📊 Game Features
 - ✅ Undo/Redo functionality with full history
@@ -71,7 +75,7 @@ Choose from multiple solving algorithms:
 - **Build Tool:** Vite 7+
 - **Animation Library:** Framer Motion
 - **Routing:** React Router DOM
-- **Styling:** CSS3 with glassmorphic design
+- **Styling:** CSS3 with glassmorphic design + per-puzzle CSS custom property theming
 - **Sound:** Web Audio API
 - **State Management:** React Hooks
 - **Storage:** Browser LocalStorage
@@ -225,7 +229,7 @@ A* combines actual cost (moves made) with estimated cost (heuristic) to find opt
 ### Solvability
 - **3×3 (8-puzzle):** ~181,440 states
 - **4×4 (15-puzzle):** ~1.3 trillion states
-- **5×5 (24-puzzle):** ~10²⁵ states (auto-solve disabled)
+- **5×5 (24-puzzle):** ~10²⁵ states (auto-solve enabled)
 
 Not all configurations are solvable. The game validates solvability before presenting puzzles.
 
@@ -236,6 +240,14 @@ Not all configurations are solvable. The game validates solvability before prese
 - Smooth gradient overlays
 - Ambient animated orbs
 - Dark theme with accent colors
+
+### Per-Puzzle Color Themes
+Each puzzle mode has its own distinct color identity using CSS custom properties:
+- **8-Puzzle:** 🟣 Violet (`rgb(139, 92, 246)`)
+- **15-Puzzle:** 🔵 Cyan (`rgb(6, 182, 212)`)
+- **24-Puzzle:** 🟠 Amber (`rgb(245, 158, 11)`)
+
+Theme colors are applied to tiles, borders, buttons, stats, and modals via `data-theme` attribute.
 
 ### Responsive Layout
 - Mobile-first design
@@ -305,7 +317,7 @@ const SOLVE_INTERVAL_MS = { 3: 320, 4: 280, 5: 240 };
 - Verify browser privacy settings allow localStorage
 
 ### Performance Issues
-- Disable auto-solve for 5×5 puzzles (intentional)
+- Auto-solve for 5×5 puzzles may take longer due to state space size
 - Use A* with Combined heuristic for speed
 - Close other browser tabs
 
@@ -344,4 +356,4 @@ For issues, suggestions, or feedback:
 
 ---
 
-*Last Updated: February 2026*
+*Last Updated: July 2025*
