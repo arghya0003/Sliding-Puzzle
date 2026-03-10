@@ -5,14 +5,14 @@
 ```
 Your Architecture:
 ├── Frontend (React + Vite) → Vercel or Netlify
-└── Backend (Express.js) → Railway, Render, or Heroku
+└── Backend (Express.js) → Render (deployed)
 ```
 
 ---
 
-## **Option 1: Railway (Recommended - Easiest)**
+## **Option 1: Render (Recommended - Currently Deployed)**
 
-### Backend Deployment to Railway
+### Backend Deployment to Render
 
 #### Step 1: Push to GitHub
 ```bash
@@ -25,18 +25,26 @@ git push -u origin main
 ```
 
 #### Step 2: Deploy Backend
-1. Go to [railway.app](https://railway.app)
-2. Click **"New Project"** → **"Deploy from GitHub"**
-3. Select your `8-puzzle` repository
-4. Railway auto-detects Node.js
-5. Configure environment:
-   - Click **"Variables"** tab
-   - Set `PORT=3001`
-   - Set `FRONTEND_URL=https://your-frontend-url.com` (add after frontend is deployed)
+1. Go to [render.com](https://render.com)
+2. Click **"New +"** → **"Web Service"**
+3. Connect your GitHub repository
+4. Configure:
+   - **Name**: `8-puzzle-backend`
+   - **Root Directory**: `/backend`
+   - **Environment**: `Node`
+   - **Build Command**: `npm install`
+   - **Start Command**: `node server.js`
+5. Add environment variables:
+   - `PORT` = `3001`
+   - `NODE_ENV` = `production`
+   - `FRONTEND_URL` = `https://your-frontend-url.com` (add after frontend is deployed)
+6. Click **"Create Web Service"**
 
 #### Step 3: Get Backend URL
-- Your backend URL will be like: `https://8-puzzle-prod.railway.app`
+- Your backend URL will be like: `https://8-puzzle-backend.onrender.com`
 - Copy this for frontend configuration
+
+> **Note**: Render free tier may sleep after 15 min of inactivity. The first request after sleep may take ~30s.
 
 ---
 
@@ -50,7 +58,7 @@ const API_BASE_URL = process.env.VITE_API_URL || 'http://localhost:3001/api';
 
 #### Step 2: Create `.env.production`
 ```bash
-VITE_API_URL=https://your-backend-url.railway.app/api
+VITE_API_URL=https://your-backend-url.onrender.com/api
 ```
 
 #### Step 3: Update leaderboard.js to use env variable
@@ -73,35 +81,29 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
    - **Output Directory**: `dist`
 5. Add environment variable:
    - **Name**: `VITE_API_URL`
-   - **Value**: `https://your-backend-url.railway.app/api`
+   - **Value**: `https://your-backend-url.onrender.com/api`
 6. Click **"Deploy"**
 
 ---
 
-## **Option 2: Render (Free Alternative)**
+## **Option 2: Railway (Paid Alternative)**
 
-### Backend Deployment to Render
+### Backend Deployment to Railway
 
 #### Step 1: Connect Repository
-1. Go to [render.com](https://render.com)
-2. Click **"New +"** → **"Web Service"**
-3. Connect your GitHub repository
-4. Select the root directory
+1. Go to [railway.app](https://railway.app)
+2. Click **"New Project"** → **"Deploy from GitHub"**
+3. Select your `8-puzzle` repository
+4. Railway auto-detects Node.js
 
 #### Step 2: Configure Service
-- **Name**: `8-puzzle-backend`
-- **Environment**: `Node`
-- **Build Command**: `npm install`
-- **Start Command**: `npm start`
-- **Plan**: Free (or Starter)
+- Root Directory: `/backend`
+- Click **"Variables"** tab
+- Set `PORT=3001`
+- Set `FRONTEND_URL=https://your-frontend-url.com` (add after frontend is deployed)
 
-#### Step 3: Add Environment Variables
-- `PORT`: `3001`
-- `NODE_ENV`: `production`
-- `FRONTEND_URL`: (update after frontend deployed)
-
-#### Step 4: Deploy
-Click **"Create Web Service"** and wait for deployment.
+#### Step 3: Deploy
+Click **"Deploy"** and copy your URL: `https://xxxx.railway.app`
 
 ---
 
@@ -162,8 +164,8 @@ heroku config:set FRONTEND_URL=https://your-frontend-url.com
 ## **Full Deployment Checklist**
 
 - [ ] Code pushed to GitHub
-- [ ] Backend deployed (Railway/Render/Heroku)
-- [ ] Backend URL copied
+- [ ] Backend deployed on Render
+- [ ] Backend URL copied (e.g. `https://xxxx.onrender.com`)
 - [ ] Frontend `.env.production` configured with backend URL
 - [ ] Frontend deployed (Vercel/Netlify)
 - [ ] Frontend URL obtained
@@ -194,8 +196,8 @@ Then redeploy backend.
 
 ### Backend Won't Start
 **Check logs**:
+- Render: Click **"Events"** tab in your Render dashboard
 - Railway: Click **"Logs"** tab
-- Render: Click **"Events"** tab
 - Heroku: Run `heroku logs --tail`
 
 ### API Not Accessible
@@ -241,15 +243,15 @@ After deploying backend successfully, add MongoDB:
 
 ## **Recommended Stack**
 
-🥇 **Best for beginners**:
+🥇 **Current setup (Free)**:
+- Frontend: **Vercel**
+- Backend: **Render** (deployed)
+- Note: Free tier backend sleeps after 15 min inactivity
+
+🥈 **Paid alternative**:
 - Frontend: **Vercel** (or Netlify)
 - Backend: **Railway** ($5/month)
-- Total: ~$5/month
-
-🥈 **Free option**:
-- Frontend: **Vercel**
-- Backend: **Render** (free tier)
-- Note: Backend sleeps after 15 min inactivity
+- Total: ~$5/month, no sleep issues
 
 ---
 

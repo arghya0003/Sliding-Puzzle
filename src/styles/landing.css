@@ -878,3 +878,102 @@ body {
         width: auto;
     }
 }
+
+/* ── Footer ── */
+.landing-footer {
+    position: relative;
+    text-align: center;
+    padding: 48px 20px 32px;
+    font-family: var(--font);
+    overflow: hidden;
+}
+
+.footer-glow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--violet), transparent);
+}
+
+.footer-glow::after {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 40px;
+    background: radial-gradient(ellipse, rgba(139, 92, 246, 0.15), transparent);
+    filter: blur(10px);
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.footer-logo {
+    font-size: 18px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--violet), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.5px;
+}
+
+.footer-dot {
+    color: var(--text-muted);
+    font-size: 18px;
+}
+
+.footer-tagline {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.footer-credit {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+    letter-spacing: 0.3px;
+}
+
+.footer-credit strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.footer-heart {
+    color: var(--violet);
+    display: inline-block;
+    animation: heartbeat 1.4s ease-in-out infinite;
+}
+
+.footer-copy {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 12px;
+    letter-spacing: 0.3px;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}

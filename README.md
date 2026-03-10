@@ -1,4 +1,4 @@
-# 🧩 Sliding Puzzle Challenge
+# 🧩 Slidix
 
 A premium, interactive sliding puzzle game built with React and Vite. Features multiple game modes, AI solvers with different algorithms and heuristics, player profiles, and a competitive leaderboard system.
 

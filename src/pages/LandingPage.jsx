@@ -409,6 +409,26 @@ export default function LandingPage() {
                     ))}
                 </motion.div>
             </div>
+
+            <motion.footer
+                className="landing-footer"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, duration: 0.6 }}
+            >
+                <div className="footer-glow"></div>
+                <div className="footer-content">
+                    <div className="footer-brand">
+                        <span className="footer-logo">Slidix</span>
+                        <span className="footer-dot">·</span>
+                        <span className="footer-tagline">Slide. Solve. Conquer.</span>
+                    </div>
+                    <p className="footer-credit">
+                        Crafted with <span className="footer-heart">♥</span> by <strong>Arghya Bhattacharya</strong>
+                    </p>
+                    <p className="footer-copy">© {new Date().getFullYear()} Slidix. All rights reserved.</p>
+                </div>
+            </motion.footer>
         </div>
     );
 }

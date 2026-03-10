@@ -18,25 +18,27 @@ git remote add origin https://github.com/YOUR_USERNAME/8-puzzle.git
 git push -u origin main
 ```
 
-### 3️⃣ Deploy Backend (Railway)
-1. [railway.app](https://railway.app) → Sign in with GitHub
-2. **New Project** → **Deploy from GitHub** → Select `8-puzzle`
+### 3️⃣ Deploy Backend (Render)
+1. [render.com](https://render.com) → Sign in with GitHub
+2. **New** → **Web Service** → Connect `8-puzzle` repository
 3. Root Directory: `/backend`
-4. Click **Deploy**
-5. Copy URL: `https://xxxx.railway.app`
+4. Build Command: `npm install`
+5. Start Command: `node server.js`
+6. Click **Create Web Service**
+7. Copy URL: `https://xxxx.onrender.com`
 
 ### 4️⃣ Deploy Frontend (Vercel)
 1. [vercel.com](https://vercel.com) → **Add New** → **Project**
 2. Import `8-puzzle` repository
 3. **Environment Variables**:
-   - `VITE_API_URL` = `https://xxxx.railway.app/api`
+   - `VITE_API_URL` = `https://xxxx.onrender.com/api`
 4. Click **Deploy**
 5. Get URL: `https://xxxx.vercel.app`
 
 ### 5️⃣ Update CORS
-1. Railway Dashboard → Your backend service
-2. **Variables** → Update `FRONTEND_URL` = `https://xxxx.vercel.app`
-3. Auto-redeploys (wait 2-3 min)
+1. Render Dashboard → Your backend service → **Environment**
+2. Add/Update `FRONTEND_URL` = `https://xxxx.vercel.app`
+3. Click **Save Changes** → Auto-redeploys (wait 2-3 min)
 
 ### ✅ Done! Your game is live!
 
@@ -105,7 +107,7 @@ https://your-frontend-url/
 VITE_API_URL=https://your-backend-url/api
 ```
 
-**Backend** → Railway/Render/Heroku variables
+**Backend** → Render environment variables
 ```
 PORT=3001
 NODE_ENV=production
@@ -120,7 +122,7 @@ After deployment, your live game will be at:
 
 **Frontend**: `https://your-project-name.vercel.app`
 
-**Backend**: `https://your-backend-name.railway.app` (keep private)
+**Backend**: `https://your-backend-name.onrender.com` (keep private)
 
 **Share**: Just the frontend URL with your friends! 🎮
 
